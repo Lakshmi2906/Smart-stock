@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - SmartStock Enterprise</title>
+    <meta name="description" content="Secure checkout with Razorpay payment gateway.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar-main">
+        <div class="container-fluid">
+            <a href="index.html" class="brand-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" stroke="white" stroke-width="1" fill="none" />
+                        <path d="M16 10a4 4 0 01-8 0" fill="none" stroke="white" stroke-width="1.5" />
+                    </svg>
+                </div>
+                <div class="logo-text">Smart<span>Stock</span></div>
+            </a>
+            <!-- Checkout Steps -->
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600" id="checkout-steps">
+                <span style="display:flex;align-items:center;gap:6px;color:var(--primary)">
+                    <span
+                        style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:white;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700">1</span>
+                    Cart
+                </span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6" />
+                </svg>
+                <span style="display:flex;align-items:center;gap:6px;color:var(--primary)">
+                    <span
+                        style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:white;font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700">2</span>
+                    Address
+                </span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6" />
+                </svg>
+                <span style="display:flex;align-items:center;gap:6px;color:var(--gray-400)">
+                    <span
+                        style="width:22px;height:22px;border-radius:50%;background:var(--gray-200);color:var(--gray-500);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700">3</span>
+                    Payment
+                </span>
+            </div>
+            <div class="navbar-right">
+                <a href="cart.html" class="btn-cart">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+                    </svg>
+                    Cart <span class="cart-badge" style="display:none">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SUCCESS PAGE -->
+    <div id="order-success" style="display:none">
+        <div class="page-container" style="padding-top:60px;padding-bottom:60px">
+            <div class="success-page">
+                <div class="success-card">
+                    <div class="success-icon">
+                        <svg width="40" height="40" fill="none" stroke="#16A34A" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                    <h2>Order Placed Successfully!</h2>
+                    <p>Thank you for shopping with SmartStock Enterprise.</p>
+                    <p>Your order <strong class="success-order-id" id="success-order-id">SSE-XXXX</strong> is confirmed.
+                    </p>
+                    <p style="margin-top:6px">Amount paid: <strong id="success-amount"
+                            style="color:var(--primary)"></strong></p>
+                    <div
+                        style="background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:12px;padding:16px;margin:24px 0;text-align:left">
+                        <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;font-weight:600">DELIVERY
+                            ESTIMATE</div>
+                        <div style="font-size:24px;font-weight:800;color:var(--dark)">15 - 20 minutes</div>
+                        <div style="font-size:13px;color:var(--gray-500);margin-top:4px">Our delivery partner is already
+                            on the way</div>
+                    </div>
+                    <a href="index.html" class="btn-shop-now" style="display:flex;justify-content:center;margin:0 auto">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT FORM -->
+    <div id="checkout-form-area">
+        <div class="page-header-strip">
+            <div class="page-container">
+                <div class="breadcrumb-nav">
+                    <a href="index.html">Home</a>
+                    <span class="sep">›</span>
+                    <a href="cart.html">Cart</a>
+                    <span class="sep">›</span>
+                    <span class="current">Checkout</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-container" style="padding-top:28px;padding-bottom:60px">
+            <div class="checkout-layout">
+
+                <!-- Left: Forms -->
+                <div>
+                    <!-- Delivery Address -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-title">
+                            <span class="step-badge">1</span>
+                            Delivery Address
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="chk-name" placeholder="Rahul Sharma">
+                            </div>
+                            <div class="form-group">
+                                <label>Mobile Number</label>
+                                <input type="tel" id="chk-phone" placeholder="9876543210" maxlength="10">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address Line 1</label>
+                            <input type="text" id="chk-addr1" placeholder="Flat / House No., Building Name, Street">
+                        </div>
+                        <div class="form-group">
+                            <label>Address Line 2 (Optional)</label>
+                            <input type="text" id="chk-addr2" placeholder="Area, Locality, Landmark">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" id="chk-city" placeholder="Mumbai">
+                            </div>
+                            <div class="form-group">
+                                <label>Pincode</label>
+                                <input type="text" id="chk-pin" placeholder="400001" maxlength="6">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>State</label>
+                            <select id="chk-state">
+                                <option value="">Select State</option>
+                                <option>Maharashtra</option>
+                                <option>Delhi</option>
+                                <option>Karnataka</option>
+                                <option>Tamil Nadu</option>
+                                <option>Gujarat</option>
+                                <option>Rajasthan</option>
+                                <option>West Bengal</option>
+                                <option>Uttar Pradesh</option>
+                                <option>Telangana</option>
+                                <option>Kerala</option>
+                                <option>Punjab</option>
+                                <option>Haryana</option>
+                            </select>
+                        </div>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <label
+                                style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:500">
+                                <input type="radio" name="addr-type" value="home" checked
+                                    style="accent-color:var(--primary)"> Home
+                            </label>
+                            <label
+                                style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:500">
+                                <input type="radio" name="addr-type" value="work" style="accent-color:var(--primary)">
+                                Work
+                            </label>
+                            <label
+                                style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:500">
+                                <input type="radio" name="addr-type" value="other" style="accent-color:var(--primary)">
+                                Other
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Slot -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-title">
+                            <span class="step-badge">2</span>
+                            Delivery Slot
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                            <label class="payment-method-card" style="flex-direction:column;gap:6px;">
+                                <input type="radio" name="slot" value="express" checked
+                                    style="accent-color:var(--primary)">
+                                <div style="font-weight:700;font-size:14px;color:var(--primary)">Express</div>
+                                <div style="font-size:12px;color:var(--gray-500)">15 - 20 min</div>
+                                <div style="font-size:11px;font-weight:600;color:var(--success)">FREE</div>
+                            </label>
+                            <label class="payment-method-card" style="flex-direction:column;gap:6px;">
+                                <input type="radio" name="slot" value="scheduled" style="accent-color:var(--primary)">
+                                <div style="font-weight:700;font-size:14px">Scheduled</div>
+                                <div style="font-size:12px;color:var(--gray-500)">Choose time</div>
+                                <div style="font-size:11px;font-weight:600;color:var(--gray-400)">FREE</div>
+                            </label>
+                            <label class="payment-method-card" style="flex-direction:column;gap:6px;">
+                                <input type="radio" name="slot" value="midnight" style="accent-color:var(--primary)">
+                                <div style="font-weight:700;font-size:14px">Midnight</div>
+                                <div style="font-size:12px;color:var(--gray-500)">12 AM - 6 AM</div>
+                                <div style="font-size:11px;font-weight:600;color:var(--primary)">+Rs.29</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="checkout-card">
+                        <div class="checkout-card-title">
+                            <span class="step-badge">3</span>
+                            Payment Method
+                        </div>
+                        <div class="payment-methods">
+                            <div class="payment-method-card selected" onclick="selectPayment('razorpay', this)">
+                                <input type="radio" name="payment" value="razorpay" checked>
+                                <div class="payment-method-icon" style="background:#EEF0FF">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#2D3CE1">
+                                        <path d="M2 7h20l-2 10H4L2 7z" />
+                                        <path d="M12 2l-2 5h4l-2-5z" />
+                                    </svg>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">Razorpay</div>
+                                    <div class="payment-method-desc">Cards, UPI, Net Banking, Wallets</div>
+                                </div>
+                                <span class="chip chip-blue">Recommended</span>
+                            </div>
+                            <div class="payment-method-card" onclick="selectPayment('upi', this)">
+                                <input type="radio" name="payment" value="upi">
+                                <div class="payment-method-icon">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/120px-UPI-Logo-vector.svg.png"
+                                        alt="UPI" style="width:36px;height:auto"
+                                        onerror="this.parentElement.innerHTML='UPI'">
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">UPI / GPay / PhonePe</div>
+                                    <div class="payment-method-desc">Instant transfer from any UPI app</div>
+                                </div>
+                            </div>
+                            <div class="payment-method-card" onclick="selectPayment('cod', this)">
+                                <input type="radio" name="payment" value="cod">
+                                <div class="payment-method-icon">
+                                    <svg width="24" height="24" fill="none" stroke="#374151" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M12 8v4l3 3" />
+                                    </svg>
+                                </div>
+                                <div class="payment-method-info">
+                                    <div class="payment-method-name">Cash on Delivery</div>
+                                    <div class="payment-method-desc">Pay when your order arrives</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:24px">
+                            <button class="btn-razorpay" onclick="initiateRazorpay()">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
+                                Pay Securely - Amount: <span id="rzp-amount">Rs.0</span>
+                            </button>
+                            <div
+                                style="text-align:center;margin-top:10px;font-size:12px;color:var(--gray-400);display:flex;align-items:center;justify-content:center;gap:8px">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
+                                256-bit SSL encryption. Your data is 100% secure.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Order Summary -->
+                <div>
+                    <div class="cart-summary-box">
+                        <div class="summary-title">Order Summary</div>
+                        <div id="checkout-order-items">
+                            <div style="color:var(--gray-400);font-size:14px;text-align:center;padding:20px">Loading
+                                items...</div>
+                        </div>
+                        <div class="summary-row"
+                            style="margin-top:14px;padding-top:14px;border-top:1.5px solid var(--gray-200)">
+                            <span>Delivery</span>
+                            <span style="color:var(--success);font-weight:600">FREE</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total Payable</span>
+                            <span id="checkout-total" style="color:var(--primary)">Rs.0</span>
+                        </div>
+                        <div
+                            style="margin-top:16px;padding:14px;background:var(--gray-50);border-radius:10px;font-size:12px;color:var(--gray-500);line-height:1.6">
+                            By placing your order, you agree to SmartStock's Terms of Service and Privacy Policy.
+                        </div>
+                    </div>
+
+                    <!-- Coupon -->
+                    <div class="cart-summary-box" style="margin-top:16px">
+                        <div style="font-size:14px;font-weight:700;margin-bottom:12px;">Apply Coupon</div>
+                        <div style="display:flex;gap:8px">
+                            <input type="text" id="coupon-input" placeholder="FIRST50 / SAVE100"
+                                style="flex:1;border:1.5px solid var(--gray-200);border-radius:8px;padding:10px 12px;font-size:13px;outline:none;font-family:Inter,sans-serif">
+                            <button onclick="applyCoupon()"
+                                style="background:var(--primary);color:white;border:none;border-radius:8px;padding:10px 16px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer">Apply</button>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                            <span onclick="document.getElementById('coupon-input').value='FIRST50'"
+                                style="background:var(--gray-100);border:1px dashed var(--gray-300);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600">FIRST50</span>
+                            <span onclick="document.getElementById('coupon-input').value='SAVE100'"
+                                style="background:var(--gray-100);border:1px dashed var(--gray-300);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-weight:600">SAVE100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="background:var(--dark);color:rgba(255,255,255,0.4);text-align:center;padding:20px;font-size:13px">
+        2025 SmartStock Enterprise | Secure Checkout
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function selectPayment(method, card) {
+            document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            const radio = card.querySelector('input[type=radio]');
+            if (radio) radio.checked = true;
+        }
+
+        function applyCoupon() {
+            const v = document.getElementById('coupon-input').value.trim().toUpperCase();
+            if (v === 'FIRST50') showToast('Coupon FIRST50 applied! Rs.50 off', 'success');
+            else if (v === 'SAVE100') showToast('Coupon SAVE100 applied! Rs.100 off', 'success');
+            else showToast('Invalid coupon code', 'error');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = JSON.parse(localStorage.getItem('sme_cart') || '[]');
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const total = subtotal + (subtotal > 499 ? 0 : 40);
+            const rzpAmt = document.getElementById('rzp-amount');
+            if (rzpAmt) rzpAmt.textContent = `Rs.${total.toLocaleString('en-IN')}`;
+        });
+    </script>
+</body>
+
+</html>

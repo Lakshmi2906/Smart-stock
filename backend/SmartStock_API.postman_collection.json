@@ -1,0 +1,247 @@
+{
+  "info": {
+    "name": "SmartStock Enterprise API",
+    "description": "Production-ready Spring Boot 3 backend - All endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token",    "value": "",                      "type": "string" },
+    { "key": "admin_token", "value": "",                   "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "1. Send OTP",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/otp/send",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"phone\": \"9876543210\" }" }
+          }
+        },
+        {
+          "name": "2. Verify OTP → Get Token",
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["var res = pm.response.json(); if(res.token) pm.collectionVariables.set('token', res.token);"] }
+          }],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/otp/verify",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"phone\": \"9876543210\", \"otp\": \"123456\" }" }
+          }
+        },
+        {
+          "name": "3. Admin Login → Get Admin Token",
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["var res = pm.response.json(); if(res.token) pm.collectionVariables.set('admin_token', res.token);"] }
+          }],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/otp/verify",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"phone\": \"9999999999\", \"otp\": \"123456\" }" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": { "method": "GET", "url": "{{base_url}}/api/products" }
+        },
+        {
+          "name": "Get By Category",
+          "request": { "method": "GET", "url": "{{base_url}}/api/products?category=Dry Fruits" }
+        },
+        {
+          "name": "Search Products",
+          "request": { "method": "GET", "url": "{{base_url}}/api/products?search=cashews" }
+        },
+        {
+          "name": "Get Product By ID",
+          "request": { "method": "GET", "url": "{{base_url}}/api/products/1" }
+        },
+        {
+          "name": "Flash Sale Products",
+          "request": { "method": "GET", "url": "{{base_url}}/api/products/flash-sale" }
+        },
+        {
+          "name": "Low Stock Products",
+          "request": { "method": "GET", "url": "{{base_url}}/api/products/low-stock?threshold=10" }
+        }
+      ]
+    },
+    {
+      "name": "Cart (Atomic Lock)",
+      "item": [
+        {
+          "name": "Add to Cart (Low Stock → Creates Lock)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/cart/add",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"productId\": 14, \"qty\": 1 }" }
+          }
+        },
+        {
+          "name": "Add to Cart (Normal Stock → No Lock)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/cart/add",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"productId\": 1, \"qty\": 2 }" }
+          }
+        },
+        {
+          "name": "View Cart",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/cart",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/cart/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Extend Lock (7 min)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/cart/extend/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkout & Payment",
+      "item": [
+        {
+          "name": "Create Order + Razorpay Intent",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/orders",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"deliveryAddress\": \"42, MG Road, Mumbai 400001\", \"deliverySlot\": \"6-8 PM Today\", \"paymentMethod\": \"razorpay\" }"
+            }
+          }
+        },
+        {
+          "name": "Verify Razorpay Payment",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/payments/razorpay",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"razorpayOrderId\": \"order_xxxxx\", \"razorpayPaymentId\": \"pay_xxxxx\", \"razorpaySignature\": \"xxxxx\" }"
+            }
+          }
+        },
+        {
+          "name": "My Order History",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/orders",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/admin/dashboard",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Add New Product",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/admin/products",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"name\": \"Test Product\", \"weight\": \"1kg\", \"price\": 199, \"originalPrice\": 250, \"stock\": 50, \"category\": \"Breakfast Cereals\", \"imageUrl\": \"https://example.com/img.jpg\" }"
+            }
+          }
+        },
+        {
+          "name": "Refill Stock",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/admin/refill",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"productId\": 14, \"qty\": 20 }" }
+          }
+        },
+        {
+          "name": "Toggle Flash Sale",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/admin/products/3/flash-sale",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"enabled\": true }" }
+          }
+        },
+        {
+          "name": "Audit Log",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/admin/audit",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        },
+        {
+          "name": "Audit Log by Product",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/admin/audit?productId=14",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }]
+          }
+        }
+      ]
+    }
+  ]
+}

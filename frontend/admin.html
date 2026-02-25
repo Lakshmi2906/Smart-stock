@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SmartStock Enterprise</title>
+    <meta name="description" content="SmartStock Enterprise admin panel for inventory management.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Admin Navbar -->
+    <nav class="navbar-main">
+        <div class="container-fluid">
+            <a href="index.html" class="brand-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" stroke="white" stroke-width="1" fill="none" />
+                    </svg>
+                </div>
+                <div class="logo-text">Smart<span>Stock</span></div>
+            </a>
+            <div style="flex:1;display:flex;justify-content:center">
+                <div
+                    style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);border-radius:8px;padding:6px 16px;font-size:13px;font-weight:700;color:var(--primary)">
+                    ADMIN PANEL
+                </div>
+            </div>
+            <div class="navbar-right">
+                <a href="index.html" class="btn-login" style="text-decoration:none">View Store</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Layout -->
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="admin-sidebar-logo">
+                <div class="logo-text">SmartStock</div>
+                <div class="admin-tag">ADMIN</div>
+            </div>
+            <nav class="admin-nav">
+                <div class="admin-nav-item active" data-tab="dashboard" onclick="showAdminTab('dashboard')">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="admin-nav-item" data-tab="inventory" onclick="showAdminTab('inventory')">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path
+                            d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                    </svg>
+                    Inventory
+                </div>
+                <div class="admin-nav-item" data-tab="add-product" onclick="showAdminTab('add-product')">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Add Product
+                </div>
+                <div class="admin-nav-item" data-tab="orders" onclick="showAdminTab('orders')">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    Orders
+                </div>
+                <div class="admin-nav-item" data-tab="locks" onclick="showAdminTab('locks')">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" />
+                        <path d="M7 11V7a5 5 0 0110 0v4" />
+                    </svg>
+                    Active Locks
+                </div>
+            </nav>
+            <div style="padding:16px 20px;margin-top:auto;border-top:1px solid rgba(255,255,255,0.08)">
+                <a href="index.html"
+                    style="color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none;display:flex;align-items:center;gap:8px">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    Back to Store
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+
+            <!-- DASHBOARD TAB -->
+            <div id="tab-dashboard" class="admin-tab-panel">
+                <div class="admin-page-title">Dashboard Overview</div>
+                <div class="admin-page-sub">Real-time inventory and order analytics</div>
+
+                <!-- Stat Cards -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon orange">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                <path d="M7 11V7a5 5 0 0110 0v4" />
+                            </svg>
+                        </div>
+                        <div class="admin-stat-num" id="adm-locks">0</div>
+                        <div class="admin-stat-label">Active Locks</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon red">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                            </svg>
+                        </div>
+                        <div class="admin-stat-num" id="adm-lowstock">0</div>
+                        <div class="admin-stat-label">Low Stock Items</div>
+                    </div>
+                    <div class="admin-stat-card red">
+                        <div class="admin-stat-icon red">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="15" y1="9" x2="9" y2="15" />
+                                <line x1="9" y1="9" x2="15" y2="15" />
+                            </svg>
+                        </div>
+                        <div class="admin-stat-num" id="adm-soldout">0</div>
+                        <div class="admin-stat-label">Sold Out Items</div>
+                    </div>
+                    <div class="admin-stat-card green">
+                        <div class="admin-stat-icon green">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <line x1="12" y1="1" x2="12" y2="23" />
+                                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                            </svg>
+                        </div>
+                        <div class="admin-stat-num" id="adm-revenue">Rs.0</div>
+                        <div class="admin-stat-label">Last Order Revenue</div>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alerts -->
+                <div class="admin-table-card">
+                    <div class="admin-table-header">
+                        <h3>Low Stock Alerts</h3>
+                        <span class="chip chip-red" id="low-count-badge">0 items</span>
+                    </div>
+                    <table class="admin-table" id="low-stock-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="low-stock-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="admin-table-card">
+                    <div class="admin-table-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div
+                        style="padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+                        <button class="btn-admin-primary" onclick="showAdminTab('inventory');renderAdminInventory()">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <line x1="9" y1="3" x2="9" y2="21" />
+                            </svg>
+                            View Inventory
+                        </button>
+                        <button class="btn-admin-primary" onclick="showAdminTab('add-product')"
+                            style="background:var(--success)">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Add Product
+                        </button>
+                        <button class="btn-admin-primary" onclick="refillAllLowStock()" style="background:#3B82F6">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <polyline points="23 4 23 10 17 10" />
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                            </svg>
+                            Refill All Low Stock
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVENTORY TAB -->
+            <div id="tab-inventory" class="admin-tab-panel" style="display:none">
+                <div class="admin-page-title">Inventory Management</div>
+                <div class="admin-page-sub">Manage stock levels, flash sales, and product availability</div>
+
+                <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+                    <input type="text" id="inv-search" placeholder="Search products..."
+                        onkeyup="filterInventory(this.value)"
+                        style="border:1.5px solid var(--gray-200);border-radius:8px;padding:10px 14px;font-size:14px;outline:none;font-family:Inter,sans-serif;min-width:220px">
+                    <select id="inv-cat-filter" onchange="filterInventory(document.getElementById('inv-search').value)"
+                        style="border:1.5px solid var(--gray-200);border-radius:8px;padding:10px 14px;font-size:14px;outline:none;font-family:Inter,sans-serif">
+                        <option value="">All Categories</option>
+                        <option>Breakfast Cereals</option>
+                        <option>Oats & Muesli</option>
+                        <option>Honey & Spreads</option>
+                        <option>Peanut Butter</option>
+                        <option>Tea & Coffee Powder</option>
+                        <option>Masala Powders</option>
+                        <option>Dry Fruits</option>
+                        <option>Rice</option>
+                        <option>Ghee</option>
+                        <option>Dals & Pulses</option>
+                        <option>Chicken</option>
+                        <option>Egg</option>
+                        <option>Combos</option>
+                    </select>
+                    <select id="inv-stock-filter"
+                        onchange="filterInventory(document.getElementById('inv-search').value)"
+                        style="border:1.5px solid var(--gray-200);border-radius:8px;padding:10px 14px;font-size:14px;outline:none;font-family:Inter,sans-serif">
+                        <option value="">All Stock</option>
+                        <option value="low">Low Stock</option>
+                        <option value="out">Sold Out</option>
+                        <option value="ok">In Stock</option>
+                    </select>
+                </div>
+
+                <div class="admin-table-card">
+                    <div class="admin-table-header">
+                        <h3>All Products</h3>
+                        <button class="btn-admin-primary" onclick="showAdminTab('add-product')">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Add Product
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table class="admin-table" id="inventory-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Flash Sale</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD PRODUCT TAB -->
+            <div id="tab-add-product" class="admin-tab-panel" style="display:none">
+                <div class="admin-page-title">Add New Product</div>
+                <div class="admin-page-sub">Add a new product to the SmartStock inventory</div>
+
+                <div class="admin-form-card">
+                    <div class="admin-form-title">Product Details</div>
+                    <div class="admin-form-grid">
+                        <div class="form-group">
+                            <label>Product Name *</label>
+                            <input type="text" id="new-name" placeholder="e.g. Organic Brown Rice">
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="new-cat">
+                                <option value="">Select Category</option>
+                                <option>Breakfast Cereals</option>
+                                <option>Tomato Sauce</option>
+                                <option>Oats & Muesli</option>
+                                <option>Honey & Spreads</option>
+                                <option>Peanut Butter</option>
+                                <option>Tea & Coffee Powder</option>
+                                <option>Batter & Mixes</option>
+                                <option>Masala Powders</option>
+                                <option>Dry Fruits</option>
+                                <option>Dates & Mixed Seeds</option>
+                                <option>Whole Spices</option>
+                                <option>Salt, Sugar & Jaggery</option>
+                                <option>Atta</option>
+                                <option>Cooking Oil</option>
+                                <option>Besan, Sooji & Maida</option>
+                                <option>Dals & Pulses</option>
+                                <option>Ghee</option>
+                                <option>Rice</option>
+                                <option>Chicken</option>
+                                <option>Fish & Seafood</option>
+                                <option>Egg</option>
+                                <option>Combos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Weight / Unit</label>
+                            <input type="text" id="new-weight" placeholder="e.g. 500g, 1kg, 12 pcs">
+                        </div>
+                        <div class="form-group">
+                            <label>Price (Rs.) *</label>
+                            <input type="number" id="new-price" placeholder="299" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Original Price (Rs.)</label>
+                            <input type="number" id="new-orig-price" placeholder="350" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Initial Stock *</label>
+                            <input type="number" id="new-stock" placeholder="50" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:4px">
+                        <label>Product Image URL (Unsplash/Pexels)</label>
+                        <input type="url" id="new-img" placeholder="https://images.unsplash.com/photo-...?w=400&q=80">
+                    </div>
+                    <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
+                        <label
+                            style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:500">
+                            <input type="checkbox" id="new-flash"
+                                style="accent-color:var(--primary);width:16px;height:16px">
+                            Mark as Flash Sale
+                        </label>
+                    </div>
+                    <div style="display:flex;gap:12px;margin-top:24px">
+                        <button class="btn-admin-primary" onclick="addProduct()">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Add Product
+                        </button>
+                        <button class="btn-admin-secondary" onclick="clearAddForm()">Clear Form</button>
+                    </div>
+                </div>
+
+                <!-- Preview Card -->
+                <div class="admin-form-card">
+                    <div class="admin-form-title">Live Preview</div>
+                    <div style="max-width:220px">
+                        <div class="product-card" id="preview-card" style="pointer-events:none">
+                            <div class="product-img-wrap">
+                                <img id="preview-img"
+                                    src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80"
+                                    alt="Preview">
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name" id="preview-name">Product Name</div>
+                                <div class="product-weight" id="preview-weight">Weight</div>
+                                <div class="stock-indicator stock-in">In Stock</div>
+                                <div class="price-row">
+                                    <div class="price-main" id="preview-price">Rs.0</div>
+                                    <button class="btn-add">ADD</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDERS TAB -->
+            <div id="tab-orders" class="admin-tab-panel" style="display:none">
+                <div class="admin-page-title">Orders</div>
+                <div class="admin-page-sub">View and manage customer orders</div>
+                <div class="admin-table-card">
+                    <div class="admin-table-header">
+                        <h3>Recent Orders</h3>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr>
+                                <td colspan="5" style="text-align:center;padding:40px;color:var(--gray-400)">No orders
+                                    yet. Orders will appear here after customers checkout.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- LOCKS TAB -->
+            <div id="tab-locks" class="admin-tab-panel" style="display:none">
+                <div class="admin-page-title">Active Locks</div>
+                <div class="admin-page-sub">Monitor 7-minute atomic locks on limited stock items</div>
+                <div class="admin-table-card">
+                    <div class="admin-table-header">
+                        <h3>Current Cart Locks</h3>
+                        <span class="chip chip-orange" id="locks-live-count">0 active</span>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty Locked</th>
+                                <th>Expires In</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="locks-tbody">
+                            <tr>
+                                <td colspan="4" style="text-align:center;padding:40px;color:var(--gray-400)">No active
+                                    locks at this time.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    style="background:rgba(217,119,6,0.06);border:1.5px solid rgba(217,119,6,0.2);border-radius:12px;padding:20px;margin-top:20px">
+                    <div style="font-size:14px;font-weight:700;color:var(--warning);margin-bottom:8px">How Atomic
+                        Locking Works</div>
+                    <div style="font-size:13px;color:var(--gray-600);line-height:1.7">
+                        When a customer adds a product with stock below 10 units, the system automatically creates a
+                        7-minute exclusive lock.
+                        This prevents other customers from purchasing the same item during checkout.
+                        If the lock expires (timer reaches 0:00), the item is automatically returned to stock.
+                        Locks are released immediately upon successful payment.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function filterInventory(query) {
+            const catFilter = document.getElementById('inv-cat-filter').value;
+            const stockFilter = document.getElementById('inv-stock-filter').value;
+            query = query.toLowerCase();
+            let list = adminProducts.filter(p => {
+                const matchQ = !query || p.name.toLowerCase().includes(query);
+                const matchCat = !catFilter || p.category === catFilter;
+                const matchStk = !stockFilter ||
+                    (stockFilter === 'low' && p.stock > 0 && p.stock < 10) ||
+                    (stockFilter === 'out' && p.stock === 0) ||
+                    (stockFilter === 'ok' && p.stock >= 10);
+                return matchQ && matchCat && matchStk;
+            });
+            const tbody = document.getElementById('inventory-tbody');
+            if (!tbody) return;
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray-400)">No products match your filters.</td></tr>`;
+                return;
+            }
+            const s = p => {
+                if (p.stock === 0) return ['chip-red', 'Sold Out'];
+                if (p.stock < 5) return ['chip-red', `Flash: ${p.stock}`];
+                if (p.stock < 10) return ['chip-orange', `Limited: ${p.stock}`];
+                return ['chip-green', 'In Stock'];
+            };
+            tbody.innerHTML = list.map(p => {
+                const [sc, sl] = s(p);
+                return `<tr>
+      <td>${p.id}</td>
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <img src="${p.image}" style="width:40px;height:40px;border-radius:8px;object-fit:cover" alt="${p.name}" onerror="this.style.display='none'">
+        <span style="font-weight:500">${p.name}</span>
+      </div></td>
+      <td><span style="font-size:12px;color:var(--gray-500)">${p.category}</span></td>
+      <td style="font-weight:600">Rs.${p.price}</td>
+      <td><span class="chip ${p.stock === 0 ? 'chip-red' : p.stock < 10 ? 'chip-orange' : 'chip-green'}">${p.stock} units</span></td>
+      <td><span class="chip ${sc}">${sl}</span></td>
+      <td><label class="flash-toggle"><input type="checkbox" ${p.is_flash_sale ? 'checked' : ''} onchange="toggleFlash(${p.id},this.checked)"><span class="slider"></span></label></td>
+      <td><button class="btn-admin-secondary" style="padding:6px 12px;font-size:12px" onclick="refillStock(${p.id})">Refill +10</button></td>
+    </tr>`;
+            }).join('');
+        }
+
+        function refillAllLowStock() {
+            adminProducts.filter(p => p.stock < 10).forEach(p => p.stock += 10);
+            showToast('All low stock items refilled by +10 units', 'success');
+            renderAdminDashboard();
+            renderLowStockAlerts();
+        }
+
+        function renderLowStockAlerts() {
+            const tbody = document.getElementById('low-stock-tbody');
+            const badge = document.getElementById('low-count-badge');
+            if (!tbody) return;
+            const low = adminProducts.filter(p => p.stock >= 0 && p.stock < 10);
+            if (badge) badge.textContent = `${low.length} items`;
+            if (low.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--gray-400)">All items are well-stocked.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = low.map(p => `
+    <tr>
+      <td><strong>${p.name}</strong></td>
+      <td><span style="font-size:12px;color:var(--gray-500)">${p.category}</span></td>
+      <td><span class="chip ${p.stock === 0 ? 'chip-red' : 'chip-orange'}">${p.stock} units</span></td>
+      <td><span class="chip ${p.stock === 0 ? 'chip-red' : p.stock < 5 ? 'chip-red' : 'chip-orange'}">${p.stock === 0 ? 'Sold Out' : p.stock < 5 ? 'Flash Sale' : 'Limited'}</span></td>
+      <td><button class="btn-admin-secondary" style="padding:5px 12px;font-size:12px" onclick="refillStock(${p.id});renderLowStockAlerts();renderAdminDashboard()">Refill +10</button></td>
+    </tr>`).join('');
+        }
+
+        function renderLocksTab() {
+            const cart = JSON.parse(localStorage.getItem('sme_cart') || '[]');
+            const locked = cart.filter(i => i.locked && i.lockExpires > Date.now());
+            const badge = document.getElementById('locks-live-count');
+            if (badge) badge.textContent = `${locked.length} active`;
+            const tbody = document.getElementById('locks-tbody');
+            if (!tbody) return;
+            if (locked.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--gray-400)">No active locks at this time.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = locked.map(i => {
+                const rem = Math.max(0, i.lockExpires - Date.now());
+                const m = Math.floor(rem / 60000), s = Math.floor((rem % 60000) / 1000);
+                return `<tr>
+      <td><strong>${i.name}</strong></td>
+      <td>${i.qty}</td>
+      <td><span class="chip ${rem < 60000 ? 'chip-red' : 'chip-orange'}">${m}:${s.toString().padStart(2, '0')}</span></td>
+      <td><span class="chip chip-orange">Active</span></td>
+    </tr>`;
+            }).join('');
+        }
+
+        function clearAddForm() {
+            ['new-name', 'new-cat', 'new-weight', 'new-price', 'new-orig-price', 'new-stock', 'new-img'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            const fc = document.getElementById('new-flash');
+            if (fc) fc.checked = false;
+        }
+
+        // Live preview for add product
+        ['new-name', 'new-price', 'new-weight', 'new-img'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', () => {
+                const pn = document.getElementById('preview-name');
+                const pw = document.getElementById('preview-weight');
+                const pp = document.getElementById('preview-price');
+                const pi = document.getElementById('preview-img');
+                if (pn) pn.textContent = document.getElementById('new-name').value || 'Product Name';
+                if (pw) pw.textContent = document.getElementById('new-weight').value || 'Weight';
+                if (pp) pp.textContent = `Rs.${document.getElementById('new-price').value || '0'}`;
+                if (pi && document.getElementById('new-img').value) pi.src = document.getElementById('new-img').value;
+            });
+        });
+
+        // Render orders from localStorage
+        function renderOrders() {
+            const last = JSON.parse(localStorage.getItem('sme_last_order') || '{}');
+            const tbody = document.getElementById('orders-tbody');
+            if (!tbody) return;
+            if (!last.orderId) return;
+            tbody.innerHTML = `<tr>
+    <td><strong>${last.orderId}</strong></td>
+    <td>${(last.items || []).length} items</td>
+    <td>Rs.${(last.total || 0).toLocaleString('en-IN')}</td>
+    <td><span class="chip chip-green">Delivered</span></td>
+    <td>Just now</td>
+  </tr>`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLowStockAlerts();
+            renderOrders();
+            setInterval(renderLocksTab, 2000);
+        });
+
+        // Override showAdminTab to also run tab-specific renders
+        const _origShowTab = showAdminTab;
+        window.showAdminTab = function (tab) {
+            _origShowTab(tab);
+            if (tab === 'locks') renderLocksTab();
+            if (tab === 'orders') renderOrders();
+            if (tab === 'inventory') filterInventory('');
+        };
+    </script>
+</body>
+
+</html>
